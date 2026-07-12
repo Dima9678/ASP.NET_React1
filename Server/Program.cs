@@ -4,6 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi;
 using Persistence;
+using Server.Factories;
+using Server.Service;
+using Server.Validators;
 
 //cloudflared tunnel --url http://localhost:49981
 
@@ -19,6 +22,12 @@ namespace Server
                 options.UseNpgsql("Host=localhost;Username=Mail;Password=11111111;Database=WebMail");
             });
 
+            builder.Services.AddScoped<ValidationCheck>();
+            builder.Services.AddScoped<LetterService>();
+            builder.Services.AddScoped<ClaimFactory>();
+            builder.Services.AddScoped<AuthService>();
+            builder.Services.AddScoped<UserService>();
+
             builder.Services
             .AddAuthentication("Cookies")
             .AddCookie("Cookies", options =>
@@ -30,23 +39,21 @@ namespace Server
                 options.Cookie.SameSite = SameSiteMode.None;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
-
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
             builder.Services.AddAuthorization();
-            // Add services to the container.
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("react", policy =>
                 {
                     policy
+                    .WithOrigins("http://localhost:49981")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
 
                 });
             });
-
-
-
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
 
@@ -54,6 +61,12 @@ namespace Server
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+            }
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
