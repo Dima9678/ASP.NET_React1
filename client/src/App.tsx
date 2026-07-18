@@ -6,15 +6,17 @@ import SignUpPage from "./pages/auth/signup";
 import MyProfilePage from "./pages/myprofile";
 
 import HomePage from "./pages/homepage";
-import NewLetter from "./pages/newletter";
+import NewLetter from "./pages/Letters/newletter";
 
-import Letter from "./pages/letter";
+import Letter from "./pages/Letters/letter";
 
-import DraftPage from "./pages/drafts";
+import DraftPage from "./pages/Drafts/DraftsPage";
+import Draft from "./pages/Drafts/EditDraft";
+
 import SentPage from "./pages/sent";
-import SpamPage from "./pages/spam";
-import StarredMailsPage from "./pages/starred";
-import TrashPage from "./pages/trash";
+import SpamPage from "./pages/Spam";
+import StarredMailsPage from "./pages/Starred";
+import TrashPage from "./pages/Trash";
 
 import './assets/css/App.css';
 import './assets/css/Reset.css';
@@ -30,6 +32,9 @@ function App() {
                 <Route path="/auth/logout" element={<LogoutPage />} />
                 <Route path="/myprofile" element={<MyProfilePage />} />
 
+                {/*вопросик обозначает что параметр необязательный*/}
+                <Route path="/draft/:id?" element={<Draft />} />
+
                 <Route path="/newletter" element={<NewLetter />} />
                 <Route path="/letter/:id" element={<Letter />} />
 
@@ -40,8 +45,6 @@ function App() {
                 <Route path="/trash" element={<TrashPage />} />
             </Routes>
         </>
-
     );
-
 }
 export default App;

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Domain.Models.DTO;
 using Server.Controllers;
 
 namespace Server.Validators
@@ -66,6 +67,18 @@ namespace Server.Validators
             if (userInDb == null)
             {
                 return (false, "Такого пользователя не существует");
+            }
+
+            return (true, string.Empty);
+        }
+        public async Task<(bool, string)> ValidateWriteDraftRequest(NewDraftDTO request)
+        {
+            if (string.IsNullOrWhiteSpace(request.RecipientEmail) &&
+                string.IsNullOrWhiteSpace(request.Title) &&
+                string.IsNullOrWhiteSpace(request.Text)
+                )
+            {
+                return (false, "Для созранения черновика должно быть хотя-бы одно значение");
             }
 
             return (true, string.Empty);
